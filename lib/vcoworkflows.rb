@@ -11,8 +11,6 @@ require File.dirname(__FILE__) + '/vcoworkflows/workflowtoken'
 require File.dirname(__FILE__) + '/vcoworkflows/cli/execute'
 require File.dirname(__FILE__) + '/vcoworkflows/cli/query'
 
-# rubocop:disable LineLength
-
 # Refer to README.md for use instructions
 module VcoWorkflows
   # Start of main CLI processing

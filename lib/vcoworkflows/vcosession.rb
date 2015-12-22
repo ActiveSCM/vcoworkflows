@@ -10,7 +10,7 @@ module VcoWorkflows
     # Accessor for rest-client object, primarily for testing purposes
     attr_reader :rest_resource
 
-    # rubocop:disable MethodLength, LineLength
+    # rubocop:disable MethodLength
 
     # Initialize the session
     #

@@ -7,8 +7,6 @@ require 'json'
 
 # VcoWorkflows
 module VcoWorkflows
-  # rubocop:disable ClassLength
-
   # WorkflowPresentation is a helper class for Workflow and is primarily used
   # internally to apply additional constraints to WorkflowParameters. Currently
   # WorkflowPresentation examines the presentation JSON from vCO to determine
@@ -22,7 +20,7 @@ module VcoWorkflows
     # @return [String[]] Array of strings (names of parameters)
     attr_reader :required
 
-    # rubocop:disable LineLength, MethodLength
+    # rubocop:disable MethodLength
 
     # Create a new WorkflowPresentation
     # @param [VcoWorkflows::WorkflowService] workflow_service workflow service to use

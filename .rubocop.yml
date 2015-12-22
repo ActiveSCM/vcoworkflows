@@ -5,5 +5,7 @@ AllCops:
     - example.rb
 Metrics/AbcSize:
   Enabled: false
+Metrics/LineLength:
+  Max: 100
 Style/SpecialGlobalVars:
   Enabled: false

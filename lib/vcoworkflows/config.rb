@@ -17,7 +17,7 @@ module VcoWorkflows
     # Whether or not to do SSL/TLS Certificate verification
     attr_accessor :verify_ssl
 
-    # rubocop:disable LineLength, MethodLength, CyclomaticComplexity, PerceivedComplexity
+    # rubocop:disable MethodLength, CyclomaticComplexity, PerceivedComplexity
 
     # Constructor
     # @param [String] config_file Path to config file to load
@@ -48,8 +48,6 @@ module VcoWorkflows
       fail(IOError, ERR[:password_unset]) if @password.nil?
     end
     # rubocop:enable LineLength, MethodLength, CyclomaticComplexity, PerceivedComplexity
-
-    # rubocop:disable LineLength
 
     # Set the URL for the vCO server, force the path component.
     # @param [String] vco_url
