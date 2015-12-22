@@ -316,14 +316,6 @@ module VcoWorkflows
 
     # rubocop:disable LineLength
 
-    # Verify that all mandatory input parameters have values
-    private def verify_parameters
-      required_parameters.each do |name, wfparam|
-        if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
-          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
-        end
-      end
-    end
     # rubocop:enable LineLength
 
     # rubocop:disable LineLength
@@ -393,13 +385,24 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength
 
+    private
+
     # Convert the input parameters to a JSON document
     # @return [String]
-    private def input_parameter_json
+    def input_parameter_json
       tmp_params = []
       @input_parameters.each_value { |v| tmp_params << v.as_struct if v.set? }
       param_struct = { parameters: tmp_params }
       param_struct.to_json
+    end
+
+    # Verify that all mandatory input parameters have values
+    def verify_parameters
+      required_parameters.each do |name, wfparam|
+        if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
+          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.") # rubocop:disable Metrics/LineLength
+        end
+      end
     end
   end
   # rubocop:enable ClassLength
