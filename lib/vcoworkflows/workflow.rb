@@ -11,8 +11,6 @@ module VcoWorkflows
 
   # Class to represent a Workflow as presented by vCenter Orchestrator.
   class Workflow
-    # rubocop:disable LineLength
-
     # Workflow GUID
     # @return [String] workflow GUID
     attr_reader :id
@@ -49,9 +47,7 @@ module VcoWorkflows
     # @return [String]
     attr_reader :source_json
 
-    # rubocop:enable LineLength
-
-    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength, LineLength
+    # rubocop:disable CyclomaticComplexity, PerceivedComplexity, MethodLength
 
     # Create a Workflow object given vCenter Orchestrator's JSON description
     #
@@ -221,9 +217,7 @@ module VcoWorkflows
       end
       wfparams
     end
-    # rubocop:enable MethodLength, LineLength
-
-    # rubocop:disable LineLength
+    # rubocop:enable MethodLength
 
     # Process exceptions raised in parse_parameters by bravely ignoring them
     #   and forging ahead blindly!
@@ -235,9 +229,6 @@ module VcoWorkflows
       $stderr.puts error.message
       $stderr.puts "\nBravely forging on and ignoring parameter #{wfparam.name}!"
     end
-    # rubocop:enable LineLength
-
-    # rubocop:disable LineLength
 
     # Get an array of the names of all the required input parameters
     # @return [Hash] Hash of WorkflowParameter input parameters which
@@ -247,9 +238,6 @@ module VcoWorkflows
       @input_parameters.each_value { |v| required[v.name] = v if v.required? }
       required
     end
-    # rubocop:enable LineLength
-
-    # rubocop:disable LineLength, MethodLength
 
     # Get the parameter object named. If a value is provided, set the value
     # and return the parameter object.
@@ -271,7 +259,7 @@ module VcoWorkflows
       end unless parameter_value.nil?
       @input_parameters[parameter_name]
     end
-    # rubocop:enable LineLength, MethodLength
+    # rubocop:enable MethodLength
 
     # Set a parameter with a WorkflowParameter object
     # @param [VcoWorkflows::WorkflowParameter] wfparameter New parameter
@@ -293,8 +281,6 @@ module VcoWorkflows
       parameter_hash.each { |name, value| parameter(name, value) }
     end
 
-    # rubocop:disable LineLength
-
     # Set a parameter to a value.
     # @deprecated Use {#parameter} instead
     # @param [String] parameter_name name of the parameter to set
@@ -314,20 +300,6 @@ module VcoWorkflows
       parameter(parameter_name).value
     end
 
-    # rubocop:disable LineLength
-
-    # Verify that all mandatory input parameters have values
-    private def verify_parameters
-      required_parameters.each do |name, wfparam|
-        if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
-          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
-        end
-      end
-    end
-    # rubocop:enable LineLength
-
-    # rubocop:disable LineLength
-
     # Execute this workflow
     # @param [VcoWorkflows::WorkflowService] workflow_service
     # @return [String] Workflow Execution ID
@@ -342,7 +314,6 @@ module VcoWorkflows
       # Let's get this thing running!
       @execution_id = workflow_service.execute_workflow(@id, input_parameter_json)
     end
-    # rubocop:enable LineLength
 
     # Get a list of all the executions of this workflow. Wrapper for
     # VcoWorkflows::WorkflowService#get_execution_list
@@ -393,13 +364,24 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength
 
+    private
+
     # Convert the input parameters to a JSON document
     # @return [String]
-    private def input_parameter_json
+    def input_parameter_json
       tmp_params = []
       @input_parameters.each_value { |v| tmp_params << v.as_struct if v.set? }
       param_struct = { parameters: tmp_params }
       param_struct.to_json
+    end
+
+    # Verify that all mandatory input parameters have values
+    def verify_parameters
+      required_parameters.each do |name, wfparam|
+        if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
+          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.") # rubocop:disable Metrics/LineLength
+        end
+      end
     end
   end
   # rubocop:enable ClassLength

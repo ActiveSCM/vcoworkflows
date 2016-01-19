@@ -1,8 +1,6 @@
 require_relative '../spec_helper.rb'
 require 'vcoworkflows'
 
-# rubocop:disable LineLength
-
 describe VcoWorkflows::VcoSession, 'VcoSession' do
   before(:each) do
     @uri = 'https://vcoserver.example.com:8281'

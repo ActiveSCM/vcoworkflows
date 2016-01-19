@@ -1,7 +1,7 @@
 require 'vcoworkflows'
 require 'thor/group'
 
-# rubocop:disable MethodLength, LineLength
+# rubocop:disable MethodLength
 
 # VcoWorkflows
 module VcoWorkflows

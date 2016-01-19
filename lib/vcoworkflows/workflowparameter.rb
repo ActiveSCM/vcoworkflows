@@ -58,8 +58,6 @@ module VcoWorkflows
     end
     # rubocop:enable MethodLength
 
-    # rubocop:disable CyclomaticComplexity
-
     # Set the parameter value
     # @param [Object] value Value for the parameter
     def set(value)
@@ -84,7 +82,6 @@ module VcoWorkflows
     end
 
     # rubocop:disable TrivialAccessors
-    # rubocop:disable LineLength
 
     # Set whether or not this WorkflowParameter is required
     # @param [Boolean] required Set this parameter as required (if not specified)
