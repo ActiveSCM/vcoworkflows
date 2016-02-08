@@ -27,7 +27,7 @@ module VcoWorkflows
     def to_s
       message = ''
       @messages.keys.sort.each do |timestamp|
-        message << "#{Time.at(timestamp / 1000)}"
+        message << Time.at(timestamp / 1000).to_s
         message << " #{@messages[timestamp]['severity']}: #{@messages[timestamp]['user']}:"
         message << " #{@messages[timestamp]['short-description']}"
         unless @messages[timestamp]['short-description'].eql?(@messages[timestamp]['long-description'])
