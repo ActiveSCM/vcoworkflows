@@ -81,7 +81,6 @@ module VcoWorkflows
 
       token = JSON.parse(@json_content)
 
-      # rubocop:disable SpaceAroundOperators
       @id                 = token.key?('id')                        ? token['id']                        : nil
       @name               = token.key?('name')                      ? token['name']                      : nil
       @state              = token.key?('state')                     ? token['state']                     : nil
@@ -93,7 +92,6 @@ module VcoWorkflows
       @current_item_state = token.key?('current-item-state')        ? token['current-item-state']        : nil
       @global_state       = token.key?('global-state')              ? token['global-state']              : nil
       @content_exception  = token.key?('content-exeption')          ? token['content-exception']         : nil
-      # rubocop:enable SpaceAroundOperators
 
       if token.key?('input-parameters')
         @input_parameters = VcoWorkflows::Workflow.parse_parameters(token['input-parameters'])
@@ -141,9 +139,9 @@ module VcoWorkflows
       string << "Started By:        #{@started_by}\n"
       string << "Content Exception: #{@content_exception}\n" unless @content_exception.nil?
       string << "\nInput Parameters:\n"
-      @input_parameters.each_value { |wf_param| string << " #{wf_param}" if wf_param.set? } if @input_parameters.size > 0
+      @input_parameters.each_value { |wf_param| string << " #{wf_param}" if wf_param.set? } unless @input_parameters.empty?
       string << "\nOutput Parameters:" << "\n"
-      @output_parameters.each_value { |wf_param| string << " #{wf_param}" } if @output_parameters.size > 0
+      @output_parameters.each_value { |wf_param| string << " #{wf_param}" } unless @output_parameters.empty?
       string
     end
     # rubocop:enable MethodLength, LineLength

@@ -116,7 +116,7 @@ module VcoWorkflows
         @service = VcoWorkflows::WorkflowService.new(session)
       end
 
-      fail(IOError, 'Unable to create/use a WorkflowService!') if @service.nil?
+      raise(IOError, 'Unable to create/use a WorkflowService!') if @service.nil?
 
       # -------------------------------------------------------------
       # Retrieve the workflow and parse it into a data structure
@@ -130,12 +130,10 @@ module VcoWorkflows
 
       # Set up the attributes if they exist in the data json,
       # otherwise nil them
-      # rubocop:disable SpaceAroundOperators
       @id          = workflow_data.key?('id')          ? workflow_data['id']          : nil
       @name        = workflow_data.key?('name')        ? workflow_data['name']        : nil
       @version     = workflow_data.key?('version')     ? workflow_data['version']     : nil
       @description = workflow_data.key?('description') ? workflow_data['description'] : nil
-      # rubocop:enable SpaceAroundOperators
 
       # Process the input parameters
       if workflow_data.key?('input-parameters')
@@ -183,7 +181,7 @@ module VcoWorkflows
       options[:verify_ssl]
     end
 
-    # rubocop:disable MethodLength, LineLength
+    # rubocop:disable MethodLength
 
     # Parse json parameters and return a nice hash
     # @param [Array<Hash>] parameter_data Array of parameter data hashes
@@ -255,7 +253,7 @@ module VcoWorkflows
         $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
         $stderr.puts "Valid parameter names are: #{@input_parameters.keys.join(', ')}"
         $stderr.puts ''
-        fail(IOError, ERR[:no_such_parameter])
+        raise(IOError, ERR[:no_such_parameter])
       end unless parameter_value.nil?
       @input_parameters[parameter_name]
     end
@@ -308,7 +306,7 @@ module VcoWorkflows
       # request, use the one defined when we were created.
       workflow_service = @service if workflow_service.nil?
       # If we still have a nil workflow_service, go home.
-      fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
+      raise(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
       # Make sure we didn't forget any required parameters
       verify_parameters
       # Let's get this thing running!
@@ -350,12 +348,12 @@ module VcoWorkflows
       string << "Version:     #{@version}\n"
 
       string << "\nInput Parameters:\n"
-      if @input_parameters.size > 0
+      unless @input_parameters.empty?
         @input_parameters.each_value { |wf_param| string << " #{wf_param}" }
       end
 
       string << "\nOutput Parameters:" << "\n"
-      if @output_parameters.size > 0
+      unless @output_parameters.empty?
         @output_parameters.each_value { |wf_param| string << " #{wf_param}" }
       end
 
@@ -376,13 +374,15 @@ module VcoWorkflows
     end
 
     # Verify that all mandatory input parameters have values
+    # rubocop:disable Style/ZeroLengthPredicate
     def verify_parameters
       required_parameters.each do |name, wfparam|
         if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
-          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.") # rubocop:disable Metrics/LineLength
+          raise(IOError, ERR[:param_verify_failed] << "#{name} required but not present.")
         end
       end
     end
+    # rubocop:enable Style/ZeroLengthPredicate
   end
   # rubocop:enable ClassLength
 end
