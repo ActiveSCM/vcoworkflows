@@ -201,13 +201,13 @@ module VcoWorkflows
                 value << element[element.keys.first]['value']
               end
             rescue StandardError => error
-              parse_failure(error)
+              parse_failure(error, wfparam, parameter)
             end
           else
             begin
               value = parameter['value'][parameter['value'].keys.first]['value']
             rescue StandardError => error
-              parse_failure(error)
+              parse_failure(error, wfparam, parameter)
             end
           end
           value = nil if value.eql?('null')
@@ -222,7 +222,7 @@ module VcoWorkflows
     # Process exceptions raised in parse_parameters by bravely ignoring them
     #   and forging ahead blindly!
     # @param [Exception] error
-    def self.parse_failure(error)
+    def self.parse_failure(error, wfparam, parameter)
       $stderr.puts "\nWhoops!"
       $stderr.puts "Ran into a problem parsing parameter #{wfparam.name} (#{wfparam.type})!"
       $stderr.puts "Source data: #{JSON.pretty_generate(parameter)}\n"
