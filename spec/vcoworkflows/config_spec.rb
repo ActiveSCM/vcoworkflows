@@ -1,6 +1,7 @@
 require_relative '../spec_helper.rb'
 require 'vcoworkflows'
 
+# rubocop:disable Metrics/BlockLength
 describe VcoWorkflows::Config, 'Config' do
   before(:each) do
     @url = 'https://vcoserver.example.com:8281/vco/api'

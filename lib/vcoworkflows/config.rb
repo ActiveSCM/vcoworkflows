@@ -43,9 +43,9 @@ module VcoWorkflows
       end
 
       # Fail if we don't have both a username and a password.
-      fail(IOError, ERR[:url_unset]) if @url.nil?
-      fail(IOError, ERR[:username_unset]) if @username.nil?
-      fail(IOError, ERR[:password_unset]) if @password.nil?
+      raise(IOError, ERR[:url_unset]) if @url.nil?
+      raise(IOError, ERR[:username_unset]) if @username.nil?
+      raise(IOError, ERR[:password_unset]) if @password.nil?
     end
     # rubocop:enable LineLength, MethodLength, CyclomaticComplexity, PerceivedComplexity
 

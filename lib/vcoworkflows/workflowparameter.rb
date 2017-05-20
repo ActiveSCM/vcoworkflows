@@ -50,11 +50,11 @@ module VcoWorkflows
       # If value is supposed to be an array but we dont' have a value yet,
       # create an empty array. If it's not supposed to be an array, just
       # set the value, even if it's still nil.
-      if options[:value].nil?
-        @type.eql?('Array') ? @value = [] : @value = nil
-      else
-        @value = set(options[:value])
-      end
+      @value = if options[:value].nil?
+                 @type.eql?('Array') ? [] : nil
+               else
+                 set(options[:value])
+               end
     end
     # rubocop:enable MethodLength
 
@@ -62,10 +62,12 @@ module VcoWorkflows
     # @param [Object] value Value for the parameter
     def set(value)
       # Do some basic checking for Arrays.
-      case @type
-      when 'Array'
-        fail(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
-      end unless value.nil?
+      unless value.nil?
+        case @type
+        when 'Array'
+          raise(IOError, ERR[:param_verify_failed]) unless value.is_a?(Array)
+        end
+      end
       @value = value
     end
     # rubocop:enable CyclomaticComplexity
@@ -75,7 +77,7 @@ module VcoWorkflows
     def set?
       case value.class
       when Array
-        value.size == 0 ? false : true
+        value.empty? ? false : true
       else
         value.nil? ? false : true
       end
@@ -103,20 +105,18 @@ module VcoWorkflows
     # Return a string representation of the parameter
     # @return [String] Pretty-formatted string
     def to_s
-      string = "#{@name}"
+      string = @name.to_s
       # If value is either nil or an empty array
-      if @value.nil? || @value.is_a?(Array) && @value.size == 0
+      if @value.nil? || @value.is_a?(Array) && @value.empty?
         string << " (#{@type}"
         string << "/#{@subtype}" if @subtype
         string << ')'
         string << ' [required]' if @required
+      elsif @type.eql?('Array')
+        string << ' ='
+        @value.each { |v| string << "\n  - #{v}" }
       else
-        if @type.eql?('Array')
-          string << ' ='
-          @value.each { |v| string << "\n  - #{v}" }
-        else
-          string << " = #{@value}"
-        end
+        string << " = #{@value}"
       end
       string << "\n"
     end
@@ -140,7 +140,7 @@ module VcoWorkflows
       # manner that vCO requires it to be presented. Otherwise, just paste
       # it on the end of the hash.
       if @type.eql?('Array')
-        fail(IOError, ERR[:wtf]) unless @value.is_a?(Array)
+        raise(IOError, ERR[:wtf]) unless @value.is_a?(Array)
         attributes[:value] = { @type.downcase => { elements: [] } }
         @value.each { |val| attributes[:value][@type.downcase][:elements] << { @subtype => { value: val } } }
       else

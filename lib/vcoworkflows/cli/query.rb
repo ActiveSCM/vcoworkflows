@@ -93,7 +93,7 @@ module VcoWorkflows
         keys = executions.keys.sort
         keys = keys.slice(keys.size - options[:last], keys.size) if options[:last] > 0
         keys.each do |timestamp|
-          dataline = "#{timestamp}"
+          dataline = timestamp.to_s
           dataline << " [#{executions[timestamp]['id']}]"
           dataline << " #{executions[timestamp]['state']}"
           puts dataline

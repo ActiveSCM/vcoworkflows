@@ -45,8 +45,8 @@ module VcoWorkflows
       response = JSON.parse(@session.get(path).body)
 
       # barf if we got anything other than a single workflow
-      fail(IOError, ERR[:too_many_workflows]) if response['total'] > 1
-      fail(IOError, ERR[:no_workflow_found]) if response['total'] == 0
+      raise(IOError, ERR[:too_many_workflows]) if response['total'] > 1
+      raise(IOError, ERR[:no_workflow_found]) if response['total'].zero?
 
       # yank out the workflow id and name from the result attributes
       workflow_id = nil
