@@ -8,7 +8,7 @@ describe VcoWorkflows::WorkflowParameter, 'WorkflowParameter' do
     @paramname = 'testparam'
     @paramtype = 'string'
     @paramvalue = 'squirrel!'
-    @paramarray = %w( a b c )
+    @paramarray = %w(a b c)
     @string_json = '''{"type":"string","name":"testparam","scope":"local","value":{"string":{"value":"squirrel!"}}}'''
     @array_json = '''{"type":"Array","name":"testparam","scope":"local","value":{"array":{"elements":[{"string":{"value":"a"}},{"string":{"value":"b"}},{"string":{"value":"c"}}]}}}'''
   end

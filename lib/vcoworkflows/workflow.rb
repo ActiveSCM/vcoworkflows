@@ -116,21 +116,20 @@ module VcoWorkflows
         @service = VcoWorkflows::WorkflowService.new(session)
       end
 
-      fail(IOError, 'Unable to create/use a WorkflowService!') if @service.nil?
+      raise(IOError, 'Unable to create/use a WorkflowService!') if @service.nil?
 
       # -------------------------------------------------------------
       # Retrieve the workflow and parse it into a data structure
       # If we're given both a name and ID, prefer the id
-      if @options[:id]
-        workflow_json = @service.get_workflow_for_id(@options[:id])
-      else
-        workflow_json = @service.get_workflow_for_name(name)
-      end
+      workflow_json = if @options[:id]
+                        @service.get_workflow_for_id(@options[:id])
+                      else
+                        @service.get_workflow_for_name(name)
+                      end
       workflow_data = JSON.parse(workflow_json)
 
       # Set up the attributes if they exist in the data json,
       # otherwise nil them
-      # rubocop:disable SpaceAroundOperators
       @id          = workflow_data.key?('id')          ? workflow_data['id']          : nil
       @name        = workflow_data.key?('name')        ? workflow_data['name']        : nil
       @version     = workflow_data.key?('version')     ? workflow_data['version']     : nil
@@ -248,15 +247,17 @@ module VcoWorkflows
     # @param [Object, nil] parameter_value Optional value for parameter.
     # @return [VcoWorkflows::WorkflowParameter] The resulting WorkflowParameter
     def parameter(parameter_name, parameter_value = nil)
-      if @input_parameters.key?(parameter_name)
-        @input_parameters[parameter_name].set parameter_value
-      else
-        $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
-        $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
-        $stderr.puts "Valid parameter names are: #{@input_parameters.keys.join(', ')}"
-        $stderr.puts ''
-        fail(IOError, ERR[:no_such_parameter])
-      end unless parameter_value.nil?
+      unless parameter_value.nil?
+        if @input_parameters.key?(parameter_name)
+          @input_parameters[parameter_name].set parameter_value
+        else
+          $stderr.puts "\nAttempted to set a value for a non-existent WorkflowParameter!"
+          $stderr.puts "It appears that there is no parameter \"#{parameter}\"."
+          $stderr.puts "Valid parameter names are: #{@input_parameters.keys.join(', ')}"
+          $stderr.puts ''
+          raise(IOError, ERR[:no_such_parameter])
+        end
+      end
       @input_parameters[parameter_name]
     end
     # rubocop:enable MethodLength
@@ -308,7 +309,7 @@ module VcoWorkflows
       # request, use the one defined when we were created.
       workflow_service = @service if workflow_service.nil?
       # If we still have a nil workflow_service, go home.
-      fail(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
+      raise(IOError, ERR[:no_workflow_service_defined]) if workflow_service.nil?
       # Make sure we didn't forget any required parameters
       verify_parameters
       # Let's get this thing running!
@@ -350,12 +351,12 @@ module VcoWorkflows
       string << "Version:     #{@version}\n"
 
       string << "\nInput Parameters:\n"
-      if @input_parameters.size > 0
+      unless @input_parameters.empty?
         @input_parameters.each_value { |wf_param| string << " #{wf_param}" }
       end
 
       string << "\nOutput Parameters:" << "\n"
-      if @output_parameters.size > 0
+      unless @output_parameters.empty?
         @output_parameters.each_value { |wf_param| string << " #{wf_param}" }
       end
 
@@ -378,8 +379,8 @@ module VcoWorkflows
     # Verify that all mandatory input parameters have values
     def verify_parameters
       required_parameters.each do |name, wfparam|
-        if wfparam.required? && (wfparam.value.nil? || wfparam.value.size == 0)
-          fail(IOError, ERR[:param_verify_failed] << "#{name} required but not present.") # rubocop:disable Metrics/LineLength
+        if wfparam.required? && (wfparam.value.nil? || wfparam.value.empty?)
+          raise(IOError, ERR[:param_verify_failed] << "#{name} required but not present.") # rubocop:disable Metrics/LineLength
         end
       end
     end
