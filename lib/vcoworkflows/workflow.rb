@@ -381,7 +381,7 @@ module VcoWorkflows
     # Verify that all mandatory input parameters have values
     def verify_parameters
       required_parameters.each do |name, wfparam|
-        if wfparam.required? && (wfparam.value.nil? || wfparam.value.empty?)
+        if wfparam.required? && (wfparam.value.nil? || wfparam.value.to_s.empty?)
           raise(IOError, ERR[:param_verify_failed] << "#{name} required but not present.") # rubocop:disable Metrics/LineLength
         end
       end
