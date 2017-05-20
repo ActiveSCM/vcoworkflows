@@ -2,6 +2,7 @@ require_relative '../spec_helper.rb'
 require 'vcoworkflows'
 
 # rubocop:disable LineLength
+# rubocop:disable Metrics/BlockLength
 
 describe VcoWorkflows::Workflow, 'Workflow' do
   before(:each) do
@@ -91,7 +92,7 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     expect(wfparams.key?('arrayparam')).to eq(true)
     expect(wfparams['arrayparam'].type).to eql('Array')
     expect(wfparams['arrayparam'].subtype).to eql('string')
-    expect(wfparams['arrayparam'].value).to eql(%w(a b c))
+    expect(wfparams['arrayparam'].value).to eql(%w[a b c])
   end
 
   it 'should parse an array of mixed parameters' do
@@ -109,7 +110,7 @@ describe VcoWorkflows::Workflow, 'Workflow' do
     expect(wfparams.key?('arrayparam')).to eq(true)
     expect(wfparams['arrayparam'].type).to eql('Array')
     expect(wfparams['arrayparam'].subtype).to eql('string')
-    expect(wfparams['arrayparam'].value).to eql(%w(a b c))
+    expect(wfparams['arrayparam'].value).to eql(%w[a b c])
   end
 
   it 'should have input and output parameters' do
