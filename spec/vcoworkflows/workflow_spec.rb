@@ -2,7 +2,6 @@ require_relative '../spec_helper.rb'
 require 'vcoworkflows'
 
 # rubocop:disable LineLength
-# rubocop:disable Metrics/BlockLength
 
 describe VcoWorkflows::Workflow, 'Workflow' do
   before(:each) do

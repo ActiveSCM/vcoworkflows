@@ -246,6 +246,8 @@ module VcoWorkflows
     # @param [String] parameter_name Name of the parameter to get
     # @param [Object, nil] parameter_value Optional value for parameter.
     # @return [VcoWorkflows::WorkflowParameter] The resulting WorkflowParameter
+    #
+    # rubocop:disable Metrics/MethodLength
     def parameter(parameter_name, parameter_value = nil)
       unless parameter_value.nil?
         if @input_parameters.key?(parameter_name)

@@ -112,13 +112,11 @@ module VcoWorkflows
         string << "/#{@subtype}" if @subtype
         string << ')'
         string << ' [required]' if @required
+      elsif @type.eql?('Array')
+        string << ' ='
+        @value.each { |v| string << "\n  - #{v}" }
       else
-        if @type.eql?('Array')
-          string << ' ='
-          @value.each { |v| string << "\n  - #{v}" }
-        else
-          string << " = #{@value}"
-        end
+        string << " = #{@value}"
       end
       string << "\n"
     end

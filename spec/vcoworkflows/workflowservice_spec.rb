@@ -5,7 +5,6 @@ require 'erb'
 include ERB::Util
 
 # rubocop:disable LineLength
-# rubocop:disable Metrics/BlockLength
 
 describe VcoWorkflows::WorkflowService, 'WorkflowService' do
   before(:each) do
